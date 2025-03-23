@@ -41,14 +41,4 @@ return [
     */
     'temperature' => env('TRANSLATION_TEMPERATURE', 0.5),
     'max_tokens' => env('TRANSLATION_MAX_TOKENS', 200),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Target Language
-    |--------------------------------------------------------------------------
-    |
-    | The default target language. If null, it will be determined dynamically.
-    |
-    */
-    'default_target_language' => env('TRANSLATION_TARGET_LANGUAGE', null),
 ];
