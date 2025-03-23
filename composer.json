@@ -1,0 +1,30 @@
+{
+    "name": "coding-partners/auto-translator",
+    "description": "A Laravel package for automatic translations.",
+    "type": "library",
+    "require": {
+        "php": ">=8.2",
+        "illuminate/support": "^12.0",
+        "spatie/laravel-translatable": "^6.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "CodingPartners\\AutoTranslator\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "YousefSaleh1",
+            "email": "148710592+YousefSaleh1@users.noreply.github.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "CodingPartners\\AutoTranslator\\AutoTranslatorServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev"
+}
