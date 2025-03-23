@@ -26,5 +26,9 @@
             ]
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "repositories": [
+        {"type": "composer", "url": "https://repo.packagist.com/coding-partners/"},
+        {"packagist.org": false}
+    ]
 }
