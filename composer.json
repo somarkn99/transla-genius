@@ -1,5 +1,5 @@
 {
-    "name": "coding-partners/auto-translator",
+    "name": "coding-partners/transla-genius",
     "description": "A Laravel package for automatic translations.",
     "type": "library",
     "require": {
@@ -10,7 +10,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "CodingPartners\\AutoTranslator\\": "src/"
+            "CodingPartners\\TranslaGenius\\": "src/"
         }
     },
     "authors": [
@@ -22,13 +22,9 @@
     "extra": {
         "laravel": {
             "providers": [
-                "CodingPartners\\AutoTranslator\\AutoTranslatorServiceProvider"
+                "CodingPartners\\TranslaGenius\\TranslaGeniusServiceProvider"
             ]
         }
     },
-    "minimum-stability": "dev",
-    "repositories": [
-        {"type": "composer", "url": "https://repo.packagist.com/coding-partners/"},
-        {"packagist.org": false}
-    ]
+    "minimum-stability": "dev"
 }

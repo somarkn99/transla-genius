@@ -1,6 +1,6 @@
 <?php
 
-namespace CodingPartners\AutoTranslator\Services;
+namespace CodingPartners\TranslaGenius\Services;
 
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Http;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Http;
  * This class provides functionality to automatically translate text using an external API.
  * It handles the configuration and communication with the translation API, and returns the translated text.
  *
- * @package CodingPartners\AutoTranslator\Services
+ * @package CodingPartners\TranslaGenius\Services
  */
 class AutoTranslationService
 {
@@ -47,11 +47,11 @@ class AutoTranslationService
      */
     public function __construct()
     {
-        $this->apiKey      = config('autoTranslator.api_key');
-        $this->apiUrl      = config('autoTranslator.api_url');
-        $this->model       = config('autoTranslator.model');
-        $this->temperature = config('autoTranslator.temperature');
-        $this->maxTokens   = config('autoTranslator.max_tokens');
+        $this->apiKey      = config('translaGenius.api_key');
+        $this->apiUrl      = config('translaGenius.api_url');
+        $this->model       = config('translaGenius.model');
+        $this->temperature = config('translaGenius.temperature');
+        $this->maxTokens   = config('translaGenius.max_tokens');
     }
 
     /**

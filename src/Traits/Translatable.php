@@ -1,8 +1,8 @@
 <?php
 
-namespace CodingPartners\AutoTranslator\Traits;
+namespace CodingPartners\TranslaGenius\Traits;
 
-use CodingPartners\AutoTranslator\Jobs\TranslateFields;
+use CodingPartners\TranslaGenius\Jobs\TranslateFields;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Translatable\HasTranslations;
 
@@ -13,7 +13,7 @@ use Spatie\Translatable\HasTranslations;
  * It automatically dispatches translation jobs when a model is created or updated,
  * and provides a scope to filter fully translated models.
  *
- * @package CodingPartners\AutoTranslator\Traits
+ * @package CodingPartners\TranslaGenius\Traits
  */
 trait Translatable
 {

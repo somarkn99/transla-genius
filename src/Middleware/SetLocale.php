@@ -1,6 +1,6 @@
 <?php
 
-namespace CodingPartners\AutoTranslator\Middleware;
+namespace CodingPartners\TranslaGenius\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;

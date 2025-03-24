@@ -1,8 +1,8 @@
 <?php
 
-namespace CodingPartners\AutoTranslator\Jobs;
+namespace CodingPartners\TranslaGenius\Jobs;
 
-use CodingPartners\AutoTranslator\Services\AutoTranslationService;
+use CodingPartners\TranslaGenius\Services\AutoTranslationService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5f59af7b627a9bce1defeebb6bbdd2d",
+    "content-hash": "6fc2ebf0bf51a3fed42d8b19c4435a23",
     "packages": [
         {
             "name": "brick/math",
@@ -548,12 +548,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "a438f86eb012c8cfbf359b3df46b1e17cc2c9276"
+                "reference": "fb81cd39911acdc0e68e55eeb77e52c158a89484"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/a438f86eb012c8cfbf359b3df46b1e17cc2c9276",
-                "reference": "a438f86eb012c8cfbf359b3df46b1e17cc2c9276",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/fb81cd39911acdc0e68e55eeb77e52c158a89484",
+                "reference": "fb81cd39911acdc0e68e55eeb77e52c158a89484",
                 "shasum": ""
             },
             "require": {
@@ -617,7 +617,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-03-22T23:03:39+00:00"
+            "time": "2025-03-24T03:36:00+00:00"
         },
         {
             "name": "laravel/serializable-closure",

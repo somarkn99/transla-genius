@@ -1,19 +1,19 @@
 <?php
 
-namespace CodingPartners\AutoTranslator;
+namespace CodingPartners\TranslaGenius;
 
 use Illuminate\Support\ServiceProvider;
 
 /**
- * Class AutoTranslatorServiceProvider
+ * Class TranslaGeniusServiceProvider
  *
- * This service provider is responsible for bootstrapping the AutoTranslator package.
+ * This service provider is responsible for bootstrapping the TranslaGenius package.
  * It handles the registration of configuration files and helper functions, and publishes
  * the package configuration file to the application's configuration directory.
  *
- * @package CodingPartners\AutoTranslator
+ * @package CodingPartners\TranslaGenius
  */
-class AutoTranslatorServiceProvider extends ServiceProvider
+class TranslaGeniusServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
@@ -26,7 +26,7 @@ class AutoTranslatorServiceProvider extends ServiceProvider
     public function register()
     {
         // Merge the package configuration file into the application's configuration.
-        $this->mergeConfigFrom(__DIR__ . '/config/autoTranslator.php', 'autoTranslator');
+        $this->mergeConfigFrom(__DIR__ . '/config/translaGenius.php', 'translaGenius');
 
         // Include the package's helper functions.
         require_once __DIR__ . '/helpers.php';
@@ -44,7 +44,7 @@ class AutoTranslatorServiceProvider extends ServiceProvider
     {
         // Publish the configuration file to the application's configuration directory.
         $this->publishes([
-            __DIR__ . '/config/autoTranslator.php' => config_path('autoTranslator.php'),
+            __DIR__ . '/config/translaGenius.php' => config_path('translaGenius.php'),
         ], 'config');
     }
 }
