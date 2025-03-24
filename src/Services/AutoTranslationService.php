@@ -65,7 +65,7 @@ class AutoTranslationService
     {
         $lang = get_target_language();
 
-        $message = "Translate this text into " . $lang . ": " . $text;
+        $message = "Translate this text into " . $lang . " and return only the translated text without additional comments or explanations: " . $text;
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
