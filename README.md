@@ -1,13 +1,13 @@
-# Auto Translator Package
+# TranslaGenius Package
 
-The Auto Translator package is a Laravel package designed to automatically translate fields in your Eloquent models using an external translation API. It leverages the power of OpenAI's GPT models to provide accurate translations. This package is particularly useful for applications that need to support multiple languages and require automatic translation of content.
+The TranslaGenius package is a Laravel package designed to automatically translate fields in your Eloquent models using an external translation API. It leverages the power of OpenAI's GPT models to provide accurate translations. This package is particularly useful for applications that need to support multiple languages and require automatic translation of content.
 
 ## Installation
 
 To install the package, you can use Composer:
 
 ```bash
-composer require coding-partners/auto-translator
+composer require coding-partners/transla-genius
 ```
 
 ## Configuration
@@ -15,10 +15,10 @@ composer require coding-partners/auto-translator
 After installing the package, you need to publish the configuration file:
 
 ```bash
-php artisan vendor:publish --provider="CodingPartners\AutoTranslator\AutoTranslatorServiceProvider" --tag="config"
+php artisan vendor:publish --provider="CodingPartners\TranslaGenius\TranslaGeniusServiceProvider" --tag="config"
 ```
 
-This will create a `autoTranslator.php` file in your `config` directory. You can modify this file to set your API key, API URL, model, and other translation settings.
+This will create a `translaGenius.php` file in your `config` directory. You can modify this file to set your API key, API URL, model, and other translation settings.
 
 ### Environment Variables
 
@@ -39,7 +39,7 @@ TRANSLATION_MAX_TOKENS=200
 To enable automatic translation for your model, include the `Translatable` trait in your Eloquent model:
 
 ```php
-use CodingPartners\AutoTranslator\Traits\Translatable;
+use CodingPartners\TranslaGenius\Traits\Translatable;
 
 class Post extends Model
 {
@@ -71,7 +71,7 @@ Schema::create('posts', function (Blueprint $table) {
 To automatically set the locale based on the request, you can include the `SetLocale` middleware in your `bootstrap/app.php`:
 
 ```php
-use CodingPartners\AutoTranslator\Middleware\SetLocale;
+use CodingPartners\TranslaGenius\Middleware\SetLocale;
 
 ->withMiddleware(function (Middleware $middleware) {
 
@@ -127,7 +127,7 @@ Here’s a complete example of how to use the package:
 ### Model
 
 ```php
-use CodingPartners\AutoTranslator\Traits\Translatable;
+use CodingPartners\TranslaGenius\Traits\Translatable;
 
 class Post extends Model
 {
@@ -175,4 +175,5 @@ After the request, the `title` and `content` fields will be automatically transl
 
 ## Conclusion
 
-The Auto Translator package simplifies the process of adding multi-language support to your Laravel application. By following the steps outlined above, you can easily configure and use the package to automatically translate your model fields, ensuring that your application is accessible to a global audience.
+The TranslaGenius package simplifies the process of adding multi-language support to your Laravel application. By following the steps outlined above, you can easily configure and use the package to automatically translate your model fields, ensuring that your application is accessible to a global audience.
+
