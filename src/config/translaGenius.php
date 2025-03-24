@@ -39,6 +39,6 @@ return [
     | Additional settings such as temperature and max tokens to adjust translation behavior.
     |
     */
-    'temperature' => env('TRANSLATION_TEMPERATURE', 0.5),
+    'temperature' => env('TRANSLATION_TEMPERATURE', 0.3),
     'max_tokens' => env('TRANSLATION_MAX_TOKENS', 200),
 ];
