@@ -28,7 +28,7 @@ Make sure to set the following environment variables in your `.env` file:
 OPENAI_API_KEY=your_openai_api_key
 TRANSLATION_API_URL=https://openrouter.ai/api/v1/chat/completions
 TRANSLATION_MODEL=openai/gpt-4o
-TRANSLATION_TEMPERATURE=0.5
+TRANSLATION_TEMPERATURE=0.3
 TRANSLATION_MAX_TOKENS=200
 ```
 
