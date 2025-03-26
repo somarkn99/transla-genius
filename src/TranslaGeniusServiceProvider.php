@@ -25,9 +25,6 @@ class TranslaGeniusServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Merge the package configuration file into the application's configuration.
-        $this->mergeConfigFrom(__DIR__ . '/config/translaGenius.php', 'translaGenius');
-
         // Include the package's helper functions.
         require_once __DIR__ . '/helpers.php';
     }

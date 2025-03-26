@@ -1,6 +1,18 @@
 <?php
 
 return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Supported Languages
+    |--------------------------------------------------------------------------
+    |
+    | List of supported languages for translation (ISO 639-1 codes).
+    | The first language will be considered as default.
+    |
+    */
+    'supported_languages' => ['en', 'ar'],
+
     /*
     |--------------------------------------------------------------------------
     | OpenAI API Key

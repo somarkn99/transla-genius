@@ -5,6 +5,7 @@ namespace CodingPartners\TranslaGenius\Jobs;
 use CodingPartners\TranslaGenius\Services\AutoTranslationService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
 
 class TranslateFields implements ShouldQueue
 {
@@ -27,19 +28,39 @@ class TranslateFields implements ShouldQueue
      */
     public function handle(AutoTranslationService $translationService)
     {
-        $translations = [];
+        try {
+            $currentLocale = get_current_locale();
+            $targetLanguages = get_supported_languages();
+            $translations = [];
 
-        foreach ($this->fields as $field) {
-            if (isset($this->model->{$field}) && empty($this->model->{$field}[get_target_language()])) {
+            foreach ($this->fields as $field) {
+                $originalText = is_array($this->model->{$field})
+                    ? ($this->model->{$field}[$currentLocale] ?? reset($this->model->{$field}))
+                    : $this->model->{$field};
+
                 $translations[$field] = [
-                    app()->getLocale() => $this->model->{$field},
-                    get_target_language() => $translationService->translate($this->model->{$field})
+                    $currentLocale => $originalText
                 ];
-            }
-        }
 
-        if (!empty($translations)) {
-            $this->model->withoutEvents(fn() => $this->model->update($translations));
+                foreach ($targetLanguages as $targetLanguage) {
+                    if (empty($this->model->{$field}[$targetLanguage])) {
+                        $translations[$field][$targetLanguage] = $translationService->translate(
+                            $originalText,
+                            $currentLocale,
+                            $targetLanguage
+                        );
+                    }
+                }
+            }
+
+            if (!empty($translations)) {
+                $this->model->withoutEvents(fn() => $this->model->update($translations));
+            }
+        } catch (\Throwable $th) {
+            Log::error("Translation job failed", [
+                'error' => $th->getMessage(),
+                'trace' => $th->getTraceAsString()
+            ]);
         }
     }
 }

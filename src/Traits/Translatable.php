@@ -32,28 +32,29 @@ trait Translatable
         static::created(fn($model) => TranslateFields::dispatch($model, $model->translatable));
 
         static::updated(function ($model) {
-            $model->forgetAllTranslations(get_target_language());
+            $model->forgetAllTranslations(get_current_locale());
             TranslateFields::dispatch($model, $model->translatable);
         });
     }
 
     /**
-     * Scope to filter models that are fully translated in the target language.
+     * Scope to filter models that are fully translated in all target languages.
      *
-     * This scope checks if all translatable fields have a translation in the target language.
-     *
-     * @param Builder $query The Eloquent query builder instance.
-     * @return Builder The modified query builder instance.
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function scopeFullyTranslated(Builder $query)
     {
-        $targetLanguage = get_target_language();
+        $targetLanguages = get_supported_languages();
 
-        $conditions = array_map(
-            fn($field) => "JSON_UNQUOTE(JSON_EXTRACT($field, '$.\"$targetLanguage\"')) IS NOT NULL",
-            $this->translatable
-        );
+        foreach ($this->translatable as $field) {
+            $query->where(function ($q) use ($field, $targetLanguages) {
+                foreach ($targetLanguages as $language) {
+                    $q->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(`$field`, '$.$language')) IS NOT NULL");
+                }
+            });
+        }
 
-        return $query->whereRaw(implode(' AND ', $conditions));
+        return $query;
     }
 }

@@ -55,17 +55,34 @@ class AutoTranslationService
     }
 
     /**
-     * Translates the given text into the target language.
+     * Translates text from source language to target language using external API
      *
-     * @param string $text The text to be translated.
-     * @return string The translated text.
-     * @throws HttpResponseException If the translation fails, an exception is thrown with the error details.
+     * @param string $text The text content to be translated
+     * @param string $sourceLanguage Source language code (ISO 639-1)
+     * @param string $targetLanguage Target language code (ISO 639-1)
+     *
+     * @return string The translated text content
+     *
+     * @throws \Illuminate\Http\Exceptions\HttpResponseException When translation fails
+     * @throws \Illuminate\Http\Client\RequestException When API request fails
+     *
+     * @example
+     * $translated = $service->translate('Hello', 'en', 'ar');
+     * // Returns: "مرحبا"
+     *
+     * @uses
+     * - Requires valid API key and configuration
+     * - Uses HTTP client to send POST request to translation API
+     * - Processes JSON response to extract translated content
+     *
+     * @internal
+     * - Constructs specific prompt for translation API
+     * - Sets appropriate headers and request parameters
+     * - Handles API errors by throwing exceptions
      */
-    public function translate($text)
+    public function translate($text, $sourceLanguage, $targetLanguage)
     {
-        $lang = get_target_language();
-
-        $message = "Translate this text into " . $lang . " and return only the translated text without additional comments or explanations: " . $text;
+        $message = "Translate this text from {$sourceLanguage} to {$targetLanguage} and return only the translated text without additional comments or explanations: " . $text;
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
