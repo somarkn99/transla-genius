@@ -1,6 +1,14 @@
 # TranslaGenius Package
 
-The TranslaGenius package is a Laravel package designed to automatically translate fields in your Eloquent models using an external translation API. It leverages the power of OpenAI's GPT models to provide accurate translations. This package is particularly useful for applications that need to support multiple languages and require automatic translation of content.
+The TranslaGenius package is a Laravel package designed to automatically translate fields in your Eloquent models using an external translation API. It supports multiple languages and provides flexible translation management.
+
+## Features
+
+- Multi-language support (configurable)
+- Automatic field translation
+- Queue-based translation processing
+- Flexible API integration
+- Comprehensive scope filters
 
 ## Installation
 
@@ -18,7 +26,24 @@ After installing the package, you need to publish the configuration file:
 php artisan vendor:publish --provider="CodingPartners\TranslaGenius\TranslaGeniusServiceProvider" --tag="config"
 ```
 
-This will create a `translaGenius.php` file in your `config` directory. You can modify this file to set your API key, API URL, model, and other translation settings.
+This will create a `translaGenius.php` file in your `config` directory. You can modify this file to set your Supported Languages, and other translation settings:
+
+```php
+
+return [
+    /*
+    |--------------------------------------------------------------------------
+    | Supported Languages
+    |--------------------------------------------------------------------------
+    | List of supported language codes (ISO 639-1).
+    | The first language will be considered as default.
+    */
+    'supported_languages' => ['en', 'ar', 'es', 'fr'],
+
+    // ... other settings
+];
+```
+
 
 ### Environment Variables
 
@@ -106,13 +131,13 @@ This will process the `TranslateFields` job and perform the translations in the 
 
 ### Example of Using the `fullyTranslated` Scope
 
-The `Translatable` trait provides a `fullyTranslated` scope that allows you to filter models that are fully translated in the target language. For example, if you want to retrieve all posts that are fully translated into Arabic:
+The `Translatable` trait provides a `fullyTranslated` scope that allows you to filter models that are fully translated in the Supported Languages.
 
 ```php
 $posts = Post::fullyTranslated()->get();
 ```
 
-This scope checks if all translatable fields have a translation in the target language (in this case, Arabic). It ensures that only records with complete translations are returned, which is useful for ensuring data consistency and completeness.
+This scope checks if all translatable fields have a translation in the Supported Languages. It ensures that only records with complete translations are returned, which is useful for ensuring data consistency and completeness.
 
 ## How It Works
 
@@ -120,7 +145,7 @@ This scope checks if all translatable fields have a translation in the target la
 2. **Translation Job**: The `TranslateFields` job uses the `AutoTranslationService` to translate the specified fields into the target language.
 3. **Translation Service**: The `AutoTranslationService` communicates with the external API to perform the translation and updates the model with the translated content.
 
-## Example
+## Example Workflow
 
 Here’s a complete example of how to use the package:
 
@@ -129,13 +154,19 @@ Here’s a complete example of how to use the package:
 ```php
 use CodingPartners\TranslaGenius\Traits\Translatable;
 
-class Post extends Model
+class Product extends Model
 {
     use Translatable;
 
+    protected $fillable = [
+        'price',
+        'name',
+        'description'
+    ];
+
     public $translatable = [
-        'title',
-        'content',
+        'name',
+        'description'
     ];
 }
 ```
@@ -143,10 +174,11 @@ class Post extends Model
 ### Migration
 
 ```php
-Schema::create('posts', function (Blueprint $table) {
+Schema::create('products', function (Blueprint $table) {
     $table->id();
-    $table->json('title');
-    $table->json('content');
+    $table->decimal('price');
+    $table->json('name');
+    $table->json('description');
     $table->timestamps();
 });
 ```
@@ -156,24 +188,45 @@ Schema::create('posts', function (Blueprint $table) {
 ```php
 public function store(Request $request)
 {
-    $post = Post::create([
-        'title' => $request->input('title'),
-        'content' => $request->input('content'),
+    $product = Product::create([
+        'price' => $request->price,
+        'name' => $request->name,
+        'description' => $request->description
     ]);
 
-    return response()->json($post, 201);
+    return response()->json([
+        "data" => $product,
+        "message" => "Done!!"
+    ], 201);
 }
 ```
 
 ### Request
 
 ```bash
-curl -X POST http://yourapp.com/api/posts -H "Accept-Language: en" -d '{"title": "Hello World", "content": "This is a test post."}'
+curl -X POST http://yourapp.com/api/posts -H "Accept-Language: en" -d '{"name": "name in English", "description": "description in English", "price": 100}'
 ```
 
-After the request, the `title` and `content` fields will be automatically translated into Arabic.
+After the request, the `name` and `description` fields will be automatically translated into Supported Languages.
+
+
+## Troubleshooting
+
+### Common Issues
+
+#### Missing translations:
+
+- Verify queue worker is running
+- Check API credentials
+- Confirm language codes match config
+
+#### Performance:
+
+- Add indexes to JSON columns
+- Consider caching frequent translations
+
+
 
 ## Conclusion
 
 The TranslaGenius package simplifies the process of adding multi-language support to your Laravel application. By following the steps outlined above, you can easily configure and use the package to automatically translate your model fields, ensuring that your application is accessible to a global audience.
-
