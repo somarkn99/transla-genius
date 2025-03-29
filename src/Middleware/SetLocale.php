@@ -16,7 +16,7 @@ class SetLocale
     public function handle(Request $request, Closure $next): Response
     {
         $supportedLanguages = config('translaGenius.supported_languages', ['en']);
-        $defaultLanguage = 'en';
+        $defaultLanguage = $supportedLanguages[0];
 
         $requestedLanguage = $request->hasHeader('Accept-Language')
             ? $request->header('Accept-Language')
