@@ -19,7 +19,7 @@ trait Translatable
 {
     use HasTranslations;
 
-    /**
+/**
      * Boot the Translatable trait.
      *
      * This method sets up event listeners for the model's `created` and `updated` events.
@@ -32,9 +32,48 @@ trait Translatable
         static::created(fn($model) => TranslateFields::dispatch($model, $model->translatable));
 
         static::updated(function ($model) {
-            $model->forgetAllTranslations(get_current_locale());
-            TranslateFields::dispatch($model, $model->translatable);
+            $translatableFields = $model->getTranslatableAttributes();
+            if (empty($translatableFields)) {
+                return;
+            }
+
+            $currentLocale = get_current_locale();
+
+            $sourceLocaleValueWasModified = false;
+
+            foreach ($translatableFields as $field) {
+                if ($model->isDirty($field)) {
+                    $originalJson = $model->getRawOriginal($field);
+                    $originalTranslations = is_string($originalJson) ? json_decode($originalJson, true) : [];
+                    $originalTranslations = is_array($originalTranslations) ? $originalTranslations : [];
+                    $originalValueForCurrentLocale = $originalTranslations[$currentLocale] ?? null;
+
+                    $newValueForCurrentLocale = $model->getTranslation($field, $currentLocale, false);
+
+                    if ($originalValueForCurrentLocale !== $newValueForCurrentLocale) {
+                        $sourceLocaleValueWasModified = true;
+                        break;
+                    }
+                }
+            }
+
+            if ($sourceLocaleValueWasModified) {
+                TranslateFields::dispatch($model, $translatableFields);
+            }
         });
+    }
+
+    /**
+     * Get the names of the attributes that are translatable.
+     * Helper method to ensure consistency.
+     *
+     * @return array
+     */
+    public function getTranslatableAttributes(): array
+    {
+        return property_exists($this, 'translatable') && is_array($this->translatable)
+            ? $this->translatable
+            : [];
     }
 
     /**

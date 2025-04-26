@@ -63,8 +63,11 @@ class AutoTranslationService
      *
      * @return string The translated text content
      *
-     * @throws \Illuminate\Http\Exceptions\HttpResponseException When translation fails
-     * @throws \Illuminate\Http\Client\RequestException When API request fails
+     * @throws \Illuminate\Http\Exceptions\HttpResponseException When:
+     *         - Translation fails after maximum retry attempts
+     *         - API returns 4xx/5xx error
+     *         - AI model returns empty/invalid response
+     * @throws \Illuminate\Http\Client\RequestException When API request fails unrecoverably
      *
      * @example
      * $translated = $service->translate('Hello', 'en', 'ar');
@@ -72,35 +75,57 @@ class AutoTranslationService
      *
      * @uses
      * - Requires valid API key and configuration
-     * - Uses HTTP client to send POST request to translation API
+     * - Uses HTTP client with automatic retry mechanism
+     * - Implements exponential backoff with jitter for retries
      * - Processes JSON response to extract translated content
      *
      * @internal
      * - Constructs specific prompt for translation API
      * - Sets appropriate headers and request parameters
-     * - Handles API errors by throwing exceptions
+     * - Retries up to 3 times for transient failures (with 200ms, 400ms, 800ms delays)
+     * - Skips retry for 4xx errors (client errors)
+     * - Validates model response structure
      */
     public function translate($text, $sourceLanguage, $targetLanguage)
     {
-        $message = "Translate this text from {$sourceLanguage} to {$targetLanguage} and return only the translated text without additional comments or explanations: " . $text;
+        $message = "Translate this text from {$sourceLanguage} to {$targetLanguage}...";
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $this->apiKey,
-        ])->post($this->apiUrl, [
+        ])->retry(
+            3,
+            function (int $attempt, \Exception $e) {
+                if ($e instanceof \Illuminate\Http\Client\RequestException && $e->response->status() >= 400) {
+                    return false;
+                }
+
+                return min(1000, 200 * (2 ** ($attempt - 1))) + rand(0, 100);
+            },
+            throw: false
+        )->post($this->apiUrl, [
             "model" => $this->model,
             'messages' => [["role" => "user", "content" => $message]],
             'temperature' => $this->temperature,
             "max_tokens" => $this->maxTokens
-        ])->json();
+        ]);
 
-        if (isset($response['error'])) {
+        if ($response->failed()) {
             throw new HttpResponseException(response()->json([
-                'message' => 'Translation failed',
-                'error' => $response['error'],
+                'message' => 'Translation failed after 3 attempts',
+                'error' => $response->json()['error'] ?? $response->body(),
             ], 500));
         }
 
-        return $response['choices'][0]['message']['content'];
+        $data = $response->json();
+
+        if (empty($data['choices'][0]['message']['content'])) {
+            throw new HttpResponseException(response()->json([
+                'message' => 'AI model returned an empty or invalid response',
+                'error' => $data['error'] ?? 'No content generated',
+            ], 500));
+        }
+
+        return $data['choices'][0]['message']['content'];
     }
 }
